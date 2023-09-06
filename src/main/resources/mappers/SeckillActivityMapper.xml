@@ -10,9 +10,13 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="total_stock" jdbcType="BIGINT" property="totalStock" />
+    <result column="activityStatus" jdbcType="INTEGER" property="activitystatus" />
+    <result column="availableStock" jdbcType="INTEGER" property="availablestock" />
+    <result column="lockStock" jdbcType="BIGINT" property="lockstock" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, commodity_id, old_price, seckill_price, start_time, end_time, total_stock
+    id, name, commodity_id, old_price, seckill_price, start_time, end_time, total_stock, 
+    activityStatus, availableStock, lockStock
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -27,10 +31,12 @@
   <insert id="insert" parameterType="com.wei.ecommercesystem.db.po.SeckillActivity">
     insert into seckill_activity (id, name, commodity_id, 
       old_price, seckill_price, start_time, 
-      end_time, total_stock)
+      end_time, total_stock, activityStatus, 
+      availableStock, lockStock)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{commodityId,jdbcType=BIGINT}, 
       #{oldPrice,jdbcType=DECIMAL}, #{seckillPrice,jdbcType=DECIMAL}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{totalStock,jdbcType=BIGINT})
+      #{endTime,jdbcType=TIMESTAMP}, #{totalStock,jdbcType=BIGINT}, #{activitystatus,jdbcType=INTEGER}, 
+      #{availablestock,jdbcType=INTEGER}, #{lockstock,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.wei.ecommercesystem.db.po.SeckillActivity">
     insert into seckill_activity
@@ -59,6 +65,15 @@
       <if test="totalStock != null">
         total_stock,
       </if>
+      <if test="activitystatus != null">
+        activityStatus,
+      </if>
+      <if test="availablestock != null">
+        availableStock,
+      </if>
+      <if test="lockstock != null">
+        lockStock,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -84,6 +99,15 @@
       </if>
       <if test="totalStock != null">
         #{totalStock,jdbcType=BIGINT},
+      </if>
+      <if test="activitystatus != null">
+        #{activitystatus,jdbcType=INTEGER},
+      </if>
+      <if test="availablestock != null">
+        #{availablestock,jdbcType=INTEGER},
+      </if>
+      <if test="lockstock != null">
+        #{lockstock,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -111,6 +135,15 @@
       <if test="totalStock != null">
         total_stock = #{totalStock,jdbcType=BIGINT},
       </if>
+      <if test="activitystatus != null">
+        activityStatus = #{activitystatus,jdbcType=INTEGER},
+      </if>
+      <if test="availablestock != null">
+        availableStock = #{availablestock,jdbcType=INTEGER},
+      </if>
+      <if test="lockstock != null">
+        lockStock = #{lockstock,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -122,7 +155,17 @@
       seckill_price = #{seckillPrice,jdbcType=DECIMAL},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
-      total_stock = #{totalStock,jdbcType=BIGINT}
+      total_stock = #{totalStock,jdbcType=BIGINT},
+      activityStatus = #{activitystatus,jdbcType=INTEGER},
+      availableStock = #{availablestock,jdbcType=INTEGER},
+      lockStock = #{lockstock,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="querySeckillActivitysByStatus" parameterType="java.lang.Integer"
+          resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from seckill_activity
+    where activityStatus = #{id,jdbcType=SMALLINT}
+  </select>
 </mapper>

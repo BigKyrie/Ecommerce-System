@@ -20,6 +20,12 @@ public class SeckillActivity {
 
     private Long totalStock;
 
+    private Integer activitystatus;
+
+    private Integer availablestock;
+
+    private Long lockstock;
+
     public Long getId() {
         return id;
     }
@@ -82,5 +88,29 @@ public class SeckillActivity {
 
     public void setTotalStock(Long totalStock) {
         this.totalStock = totalStock;
+    }
+
+    public Integer getActivitystatus() {
+        return activitystatus;
+    }
+
+    public void setActivitystatus(Integer activitystatus) {
+        this.activitystatus = activitystatus;
+    }
+
+    public Integer getAvailablestock() {
+        return availablestock;
+    }
+
+    public void setAvailablestock(Integer availablestock) {
+        this.availablestock = availablestock;
+    }
+
+    public Long getLockstock() {
+        return lockstock;
+    }
+
+    public void setLockstock(Long lockstock) {
+        this.lockstock = lockstock;
     }
 }
