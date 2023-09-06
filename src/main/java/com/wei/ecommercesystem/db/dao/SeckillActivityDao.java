@@ -16,4 +16,9 @@ public interface SeckillActivityDao {
     public SeckillActivity querySeckillActivityById(long activityId);
 
     public void updateSeckillActivity(SeckillActivity seckillActivity);
+
+    public boolean lockStock(long activityId);
+
+    public boolean deductStock(Long seckillActivityId);
+
 }
