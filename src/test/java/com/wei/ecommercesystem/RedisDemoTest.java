@@ -1,7 +1,9 @@
 package com.wei.ecommercesystem;
 
+import com.wei.ecommercesystem.service.SeckillActivityService;
 import com.wei.ecommercesystem.util.RedisService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
@@ -15,6 +17,8 @@ import javax.annotation.Resource;
 public class RedisDemoTest {
     @Resource
     private RedisService redisService;
+    @Autowired
+    SeckillActivityService seckillActivityService;
 
     @Test
     public void  stockTest(){
@@ -34,4 +38,10 @@ public class RedisDemoTest {
         String stock = redisService.getValue("stock:19");
         System.out.println("stock:"+stock);
     }
+
+    @Test
+    public void pushSeckillInfoToRedisTest(){
+        seckillActivityService.pushSeckillInfoToRedis(4);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.wei.ecommercesystem.web;
 
+import com.alibaba.fastjson.JSON;
 import com.wei.ecommercesystem.db.dao.OrderDao;
 import com.wei.ecommercesystem.db.dao.SeckillActivityDao;
 import com.wei.ecommercesystem.db.dao.SeckillCommodityDao;
@@ -8,6 +9,8 @@ import com.wei.ecommercesystem.db.po.SeckillActivity;
 import com.wei.ecommercesystem.db.po.SeckillCommodity;
 import com.wei.ecommercesystem.service.SeckillActivityService;
 import com.wei.ecommercesystem.util.RedisService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +31,7 @@ import java.util.Map;
  * @description:
  * @author: Yuheng Wei
  */
+@Slf4j
 @Controller
 public class SeckillActivityController {
     @Autowired
@@ -88,10 +92,28 @@ public class SeckillActivityController {
     @RequestMapping("/item/{seckillActivityId}")
     public String itemPage(Map<String, Object> resultMap, @PathVariable long
             seckillActivityId) {
-        SeckillActivity seckillActivity =
-                seckillActivityDao.querySeckillActivityById(seckillActivityId);
-        SeckillCommodity seckillCommodity =
-                seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+//        SeckillActivity seckillActivity =
+//                seckillActivityDao.querySeckillActivityById(seckillActivityId);
+//        SeckillCommodity seckillCommodity =
+//                seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+        SeckillActivity seckillActivity;
+        SeckillCommodity seckillCommodity;
+        String seckillActivityInfo = redisService.getValue("seckillActivity:" + seckillActivityId);
+        if (StringUtils.isNotEmpty(seckillActivityInfo)) {
+            log.info("redis缓存数据:" + seckillActivityInfo);
+            seckillActivity = JSON.parseObject(seckillActivityInfo, SeckillActivity.class);
+        }
+        else {
+            seckillActivity = seckillActivityDao.querySeckillActivityById(seckillActivityId);
+        }
+        String seckillCommodityInfo = redisService.getValue("seckillCommodity:" + seckillActivity.getCommodityId());
+        if (StringUtils.isNotEmpty(seckillCommodityInfo)) {
+            log.info("redis缓存数据:" + seckillCommodityInfo);
+            seckillCommodity = JSON.parseObject(seckillActivityInfo, SeckillCommodity.class);
+        }
+        else {
+            seckillCommodity = seckillCommodityDao.querySeckillCommodityById(seckillActivity.getCommodityId());
+        }
         resultMap.put("seckillActivity", seckillActivity);
         resultMap.put("seckillCommodity", seckillCommodity);
         resultMap.put("seckillPrice", seckillActivity.getSeckillPrice());
